@@ -1,0 +1,225 @@
+ORBITAL RESCUE
+API backend para priorização e agendamento de imagens de satélite em situações de desastres naturais
+
+Global Solution — 1º Semestre de 2026
+Indústria Espacial
+
+
+Composição da equipe
+
+Nome                                    RM
+Cilas Pinto Macedo                      560745
+Ian Junji Maluvayshi Matsushita         560588
+Pedro Arão Baquini                      559580
+Leandro Kamada Pesce Dimov              560381
+
+
+========================================
+1. Apresentação do projeto, desafio e solução proposta
+========================================
+
+1.1 Nome do projeto
+
+Orbital Rescue.
+
+1.2 Desafio/problema escolhido
+
+Quando um desastre natural acontece — uma enchente que engole bairros inteiros, um incêndio que avança sobre reservas florestais, um deslizamento que isola comunidades — a primeira necessidade de quem coordena o socorro é enxergar o que está acontecendo. E poucas ferramentas oferecem uma visão tão ampla e objetiva quanto uma imagem de satélite.
+
+O problema é que esse recurso não está disponível sob demanda como uma busca no Google Maps. Satélites de observação passam por uma determinada região em horários específicos, carregam sensores com capacidades diferentes, podem já estar comprometidos com outras missões e ainda sofrem interferência de condições atmosféricas, como cobertura de nuvens. Numa emergência, vários órgãos podem precisar de imagens ao mesmo tempo, e alguém precisa decidir qual pedido atender primeiro, qual satélite consegue cumprir a tarefa e em que janela de tempo a captura é viável.
+
+Hoje, boa parte dessa triagem ainda depende de processos manuais, trocas de e-mail e decisões baseadas mais em urgência percebida do que em critérios objetivos. O resultado é desperdício de janelas de captura, atrasos na resposta e, no pior cenário, decisões de resgate tomadas sem a informação que poderia ter feito diferença.
+
+Esse é o desafio que o Orbital Rescue se propõe a resolver: transformar a priorização e o agendamento de imagens orbitais em um processo automatizado, transparente e fundamentado em regras claras.
+
+1.3 Apresentação sumarizada e formal da solução
+
+O Orbital Rescue é uma API backend voltada ao contexto aeroespacial, com foco na priorização inteligente e no agendamento automatizado de imagens orbitais para resposta rápida a desastres naturais.
+
+A plataforma permite que entidades públicas, organizações humanitárias, institutos ambientais e empresas privadas registrem solicitações de captura de imagem, informando localização geográfica, tipo de desastre, nível de urgência, risco humano envolvido, sensor desejado e prazo de entrega.
+
+Com base nesses dados, o sistema calcula automaticamente a prioridade de cada solicitação, verifica a compatibilidade entre o sensor disponível e o tipo de ocorrência, consulta os satélites ativos, identifica janelas de captura viáveis, previne conflitos de agenda e gera uma ordem de captura. Depois que a imagem é entregue, a API registra se o prazo foi ou não cumprido, garantindo rastreabilidade e possibilitando auditoria do processo.
+
+A solução vai além de um CRUD tradicional, porque incorpora regras de negócio reais ligadas a emergências, infraestrutura espacial, compatibilidade de sensores, disputa por recursos orbitais, controle de prazos e impacto social direto.
+
+
+========================================
+2. Público-alvo, usuários e estimativa de impacto
+========================================
+
+2.1 Público-alvo principal
+
+O Orbital Rescue foi pensado para atender organizações que dependem de informação geoespacial rápida em cenários de crise. Os principais perfis de usuário são:
+
+- Defesas Civis municipais, estaduais e nacionais, que coordenam resgates, evacuações e respostas emergenciais e precisam de imagens atualizadas para tomar decisões no menor tempo possível.
+
+- Prefeituras e governos locais, que usam imagens de satélite para mapear áreas afetadas, planejar rotas alternativas, interditar vias e direcionar equipes de campo.
+
+- ONGs humanitárias e ambientais, que atuam na resposta a desastres e no apoio a comunidades atingidas, muitas vezes com recursos limitados e sem acesso direto a provedores de imagem.
+
+- Institutos ambientais e centros de monitoramento, que acompanham queimadas, desmatamento, vazamentos e outros eventos que exigem imagens com sensores específicos.
+
+- Empresas privadas com risco socioambiental, como mineradoras, seguradoras, concessionárias de infraestrutura e operadoras de barragens, que precisam comprovar monitoramento contínuo e resposta a incidentes.
+
+- Operadores de satélite e provedores de imagens orbitais, que gerenciam a agenda dos satélites, os sensores embarcados e as janelas de passagem, e precisam de um sistema que organize os pedidos de forma eficiente.
+
+2.2 Fundamentação por dados de mercado e estatísticas
+
+Desastres naturais globais — Segundo o relatório "2024 Disasters in Numbers" do EM-DAT, o ano de 2024 registrou 393 desastres relacionados a ameaças naturais, resultando em 16.753 mortes, 167,2 milhões de pessoas afetadas e US$ 241,95 bilhões em perdas econômicas. Esse volume de ocorrências reforça a necessidade de sistemas que consigam triar e priorizar pedidos de imagem com agilidade.
+
+Eventos climáticos extremos — A Organização Meteorológica Mundial (WMO), no relatório "State of the Global Climate 2024", destacou que os eventos extremos daquele ano causaram destruição massiva de moradias, infraestrutura, florestas e áreas agrícolas, além de gerar o maior número anual de novos deslocamentos forçados desde 2008. O cenário reforça que sistemas de inteligência geoespacial são cada vez mais urgentes.
+
+Enchentes no Rio Grande do Sul — As enchentes que atingiram o Rio Grande do Sul em 2024 afetaram cerca de 2,3 milhões de pessoas, com centenas de milhares de deslocados e impactos graves em infraestrutura urbana e rural. É o tipo de evento em que o Orbital Rescue teria aplicação direta: múltiplas entidades precisando de imagens ao mesmo tempo, com urgência real e sensores diferentes.
+
+Queimadas no Brasil — Os dados do MapBiomas indicaram que mais de 30,8 milhões de hectares queimaram no Brasil em 2024, um aumento de 79% em relação ao ano anterior. Monitorar a extensão do fogo, a fumaça e as áreas já atingidas depende de imagens orbitais — e sensores como o SAR são essenciais quando há cobertura de fumaça.
+
+Mercado de dados de satélite — A Grand View Research estimou o mercado global de serviços de dados de satélite em US$ 12,1 bilhões em 2024, com projeção de crescimento para US$ 29,6 bilhões até 2030. Isso mostra que existe oportunidade econômica concreta para plataformas que organizem, priorizem e automatizem o acesso a dados espaciais.
+
+Uso de satélites em emergências — Serviços como o Copernicus Emergency Management Service já utilizam imagens de satélite e dados geoespaciais para mapeamento de riscos naturais, emergências humanitárias e situações provocadas por ação humana. O Orbital Rescue se inspira nesse modelo, trazendo a camada de priorização e agendamento automatizado que hoje ainda é feita de forma manual em muitos contextos.
+
+
+2.3 Impacto esperado da solução
+
+- Reduzir o tempo de triagem de solicitações de imagem, substituindo critérios subjetivos por uma pontuação automatizada que leva em conta risco humano, urgência, tipo de desastre e prazo.
+
+- Aumentar a taxa de atendimento dentro do prazo, já que o sistema cruza urgência com disponibilidade de satélite, compatibilidade de sensor e janela de captura antes de reservar a operação.
+
+- Evitar conflitos de agenda orbital, impedindo que o mesmo satélite seja reservado para duas capturas incompatíveis no mesmo intervalo de tempo.
+
+- Apoiar decisões de resgate, evacuação e monitoramento ambiental com base em imagens mais adequadas ao tipo de ocorrência, em vez de depender da primeira imagem disponível.
+
+- Criar rastreabilidade para auditoria, permitindo verificar por que uma solicitação recebeu determinada prioridade e quem autorizou eventuais alterações manuais.
+
+- Viabilizar um modelo de negócio B2G (Business to Government), B2B ou SaaS voltado à resposta emergencial, organizando a relação entre solicitantes e provedores de imagens orbitais.
+
+
+========================================
+3. Personas dos principais usuários
+========================================
+
+Persona 1 — Ana Martins
+
+Ana, 42 anos, é coordenadora da Defesa Civil Estadual no Rio Grande do Sul. Formada em Engenharia Civil com especialização em Gestão de Riscos, trabalha há 14 anos coordenando resgates, evacuações e respostas a enchentes e deslizamentos. Usa sistemas de alerta e georreferenciamento no dia a dia, mas não tem formação em TI.
+
+Sua maior frustração é a demora para conseguir imagens de satélite durante emergências. Já viveu situações em que precisava de uma imagem atualizada para decidir se evacuava uma comunidade ribeirinha, mas o pedido ficava preso numa fila sem critério claro. No Orbital Rescue, Ana criaria solicitações marcando risco humano e urgência, esperando que o sistema priorize enchentes com famílias ilhadas acima de monitoramentos de rotina — e que ela consiga justificar tecnicamente essa priorização.
+
+---
+
+Persona 2 — Roberto Lima
+
+Roberto, 35 anos, é biólogo com mestrado em Sensoriamento Remoto e trabalha no IBAMA monitorando queimadas e desmatamento na Amazônia. É um usuário técnico: entende de bandas espectrais, projeções cartográficas e resolução espacial.
+
+Seu problema é a dependência de imagens ópticas, que ficam inutilizáveis com fumaça ou nuvens — situação frequente na Amazônia. Ele sabe que sensores SAR funcionam nessas condições, mas nem sempre tem acesso rápido. No Orbital Rescue, Roberto espera que o sistema sugira automaticamente sensor SAR em dias de alta nebulosidade, e que ele possa acompanhar prazos e manter histórico organizado para relatórios internos.
+
+---
+
+Persona 3 — Mariana Costa
+
+Mariana, 38 anos, é arquiteta urbanista e gestora de planejamento em uma prefeitura no interior de Minas Gerais. Coordena respostas pós-desastre: mapeamento de áreas atingidas, rotas para equipes de resgate e locais para abrigos.
+
+Sua frustração é tomar decisões em poucas horas sem ter imagens atualizadas. Quando solicita uma captura, não sabe quando — ou se — o pedido será atendido. No Orbital Rescue, Mariana quer acompanhar o status em tempo real e poder justificar, para o prefeito e órgãos de controle, por que determinadas áreas foram priorizadas.
+
+---
+
+Persona 4 — Carlos Andrade
+
+Carlos, 47 anos, é engenheiro ambiental e gerente de risco socioambiental em uma mineradora de grande porte. Desde Brumadinho, a cobrança por monitoramento contínuo de barragens e áreas de rejeito aumentou drasticamente. Ele precisa manter um histórico auditável de tudo.
+
+Hoje, solicitar imagens envolve e-mails, negociação de prazo e arquivamento manual. Montar um dossiê para fiscalização leva dias. No Orbital Rescue, Carlos faria solicitações periódicas, consultaria histórico completo com datas, sensores e coordenadas, e extrairia relatórios de SLA prontos para compliance.
+
+---
+
+Persona 5 — Renata Silva
+
+Renata, 31 anos, é engenheira de telecomunicações e operadora de missão em uma provedora de imagens orbitais. Gerencia a agenda dos satélites: pedidos de captura, compatibilidade de sensor e janelas de passagem. É a usuária mais técnica — entende órbita, revisita e limitações de cada sensor.
+
+O volume de pedidos cresceu muito, e ela recebe solicitações por canais diferentes, com informações incompletas. Já aconteceu de priorizar errado porque um pedido urgente chegou por outro canal. No Orbital Rescue, Renata receberia ordens de captura já priorizadas e validadas, podendo focar na execução em vez de gastar tempo triando pedidos.
+
+
+========================================
+4. Documentação de especificação de requisitos
+========================================
+
+A especificação abaixo organiza os requisitos em quatro categorias: funcionais, não-funcionais, técnicos e regras de negócio.
+
+4.1 Requisitos funcionais
+
+ID        Requisito
+RF-01     Permitir o cadastro e a autenticação de clientes solicitantes, como Defesa Civil, prefeituras, ONGs, institutos ambientais e empresas privadas.
+RF-02     Permitir a criação de solicitações de imagem contendo área geográfica, tipo de desastre, urgência, risco humano, sensor desejado, prazo e justificativa.
+RF-03     Calcular automaticamente a prioridade da solicitação com base em risco humano, urgência, tipo de desastre, tipo de cliente e prazo de entrega.
+RF-04     Listar solicitações em uma fila ordenada por prioridade, exibindo status, prazo, cliente e pontuação calculada.
+RF-05     Cadastrar e consultar satélites ativos, incluindo seus sensores, resolução, disponibilidade, órbita simulada e status operacional.
+RF-06     Verificar a compatibilidade entre o sensor do satélite e o tipo de desastre informado na solicitação.
+RF-07     Localizar janelas de captura disponíveis para a área solicitada e impedir conflitos de agenda para o mesmo satélite.
+RF-08     Reservar uma janela de captura e gerar uma ordem de captura vinculada à solicitação, ao satélite e ao prazo definido.
+RF-09     Registrar a entrega da imagem, incluindo data, link do arquivo, metadados e verificação de cumprimento do SLA.
+
+4.2 Requisitos não-funcionais
+
+ID        Requisito
+RNF-01    A API deve exigir autenticação segura para clientes, operadores e administradores.
+RNF-02    O cálculo de prioridade deve retornar resultado em até 2 segundos para uma solicitação individual no ambiente de MVP.
+RNF-03    A aplicação deve manter logs de auditoria para ações críticas, como criação, priorização, reserva, cancelamento e entrega.
+RNF-04    A solução deve ser escalável para receber múltiplas solicitações simultâneas sem perda de consistência nas reservas.
+RNF-05    A API deve possuir documentação clara em formato OpenAPI/Swagger para facilitar integração com sistemas externos.
+RNF-06    O sistema deve proteger dados sensíveis e aplicar princípios de privacidade, controle de acesso e rastreabilidade.
+RNF-07    A plataforma deve registrar métricas operacionais, como tempo médio de atendimento, taxa de SLA cumprido e volume por desastre.
+RNF-08    O backend deve ser tolerante a falhas comuns, retornando mensagens de erro padronizadas e mantendo integridade dos dados.
+
+4.3 Requisitos técnicos
+
+ID        Requisito
+RT-01     A solução deve ser desenvolvida como uma API backend REST, com comunicação em JSON.
+RT-02     O banco de dados deve utilizar PostgreSQL, preferencialmente com extensão PostGIS para dados geográficos.
+RT-03     O sistema deve possuir um módulo de motor de prioridade responsável por calcular e justificar a pontuação de cada solicitação.
+RT-04     O módulo de agendamento deve tratar janelas temporais e validar sobreposição de reservas por satélite.
+RT-05     A autenticação deve utilizar tokens, como JWT, ou padrão equivalente para controle de sessão e perfis de acesso.
+RT-06     A aplicação deve ser containerizável com Docker para facilitar execução em ambiente acadêmico, local ou em nuvem.
+RT-07     A API deve expor endpoints separados para clientes, solicitações, satélites, janelas de captura, ordens e entregas.
+RT-08     O projeto deve conter testes automatizados para regras críticas, principalmente prioridade, compatibilidade e conflito de agenda.
+
+4.4 Regras de negócio
+
+ID        Requisito
+RN-01     Solicitações com risco direto à vida humana devem receber peso de prioridade maior que solicitações de monitoramento preventivo.
+RN-02     Clientes de resposta emergencial, como Defesa Civil, devem ter prioridade superior em situações oficialmente classificadas como desastre.
+RN-03     Um satélite não pode ter duas reservas confirmadas em janelas de captura conflitantes.
+RN-04     Uma solicitação só pode ser agendada se houver sensor compatível com o tipo de desastre e com o nível mínimo de resolução exigido.
+RN-05     Solicitações com prazo de entrega menor devem receber acréscimo de prioridade, desde que tecnicamente viáveis.
+RN-06     Quando houver alta cobertura de nuvens prevista, o sistema deve reduzir a pontuação de sensores ópticos ou sugerir sensor SAR quando disponível.
+RN-07     Alterações manuais de prioridade só podem ser realizadas por usuário autorizado e devem exigir justificativa registrada em auditoria.
+RN-08     O SLA só deve ser considerado cumprido quando a imagem for entregue antes do prazo e estiver vinculada a metadados mínimos da captura.
+
+
+========================================
+5. Product Backlog
+========================================
+
+O backlog foi organizado em épicos e histórias de usuário, com critérios de aceite que representam a Definition of Done de cada item.
+
+Épico              | HU    | História de usuário                                                                                          | Definition of Done / Critérios de aceite
+E01 - Gestão de acesso | HU-01 | Como cliente solicitante, quero criar uma conta institucional para acessar a API.                            | Conta criada com nome, tipo de cliente e contato; dados obrigatórios validados; cliente fica ativo para criar solicitações.
+E01 - Gestão de acesso | HU-02 | Como usuário autenticado, quero realizar login para acessar funcionalidades conforme meu perfil.            | Login retorna token válido; usuário sem credenciais corretas é bloqueado; perfil é aplicado nas permissões.
+E02 - Solicitações de imagem | HU-03 | Como cliente, quero criar uma solicitação de imagem informando local, desastre, urgência e prazo.     | Solicitação salva com status inicial; campos obrigatórios validados; área geográfica e prazo ficam registrados.
+E02 - Solicitações de imagem | HU-04 | Como cliente, quero acompanhar o status da minha solicitação.                                         | API retorna status atual; exibe prioridade, prazo e próxima etapa; apenas usuários autorizados visualizam a solicitação.
+E03 - Priorização   | HU-05 | Como operador de missão, quero que a prioridade de cada solicitação seja calculada automaticamente para que eu receba a fila já ordenada por urgência real.  | Pontuação é calculada com critérios definidos; resultado fica salvo; justificativa da pontuação é retornada pela API.
+E03 - Priorização   | HU-06 | Como operador, quero visualizar uma fila ordenada por prioridade.                                           | Fila aparece em ordem decrescente; pode filtrar por tipo de desastre/status; itens com SLA mais crítico ficam evidentes.
+E04 - Satélites e sensores | HU-07 | Como administrador, quero cadastrar satélites e sensores disponíveis.                                 | Cadastro inclui nome, sensor, resolução, status e disponibilidade; dados inválidos são recusados.
+E04 - Satélites e sensores | HU-08 | Como operador de missão, quero que o sistema valide a compatibilidade entre sensor e desastre antes de agendar uma captura, para evitar desperdício de janela orbital.  | Sistema compara desastre e sensor; sensores incompatíveis não são agendados; alternativa é sugerida quando existir.
+E05 - Agendamento orbital | HU-09 | Como operador, quero buscar janelas de captura disponíveis para a área solicitada.                     | Retorna janelas candidatas; considera prazo e satélite ativo; ignora janelas fora do SLA.
+E05 - Agendamento orbital | HU-10 | Como operador, quero reservar uma janela sem conflito de agenda.                                       | Reserva é criada somente se não houver sobreposição; conflitos retornam erro padronizado; status da solicitação é atualizado.
+E06 - Ordem de captura | HU-11 | Como operador, quero gerar uma ordem de captura a partir de uma reserva aprovada.                       | Ordem contém solicitação, satélite, sensor, janela e prioridade; status muda para aguardando captura.
+E07 - Entrega e SLA  | HU-12 | Como cliente, quero receber o link da imagem e saber se o prazo foi cumprido.                               | Entrega registra data, link e metadados; sistema calcula SLA cumprido/não cumprido; cliente consegue consultar o resultado.
+E08 - Auditoria e indicadores | HU-13 | Como gestor, quero visualizar indicadores de operação e histórico de decisões.                    | API retorna volume por desastre, SLA, tempo médio e alterações manuais; dados podem ser auditados por período.
+
+
+========================================
+6. Link para o Vídeo Pitch
+========================================
+
+Link do vídeo pitch publicado no YouTube de forma privada ou não listada:
+
+[inserir link do vídeo aqui]
+
+Observação: o link deve permitir acesso aos professores no momento da correção.
