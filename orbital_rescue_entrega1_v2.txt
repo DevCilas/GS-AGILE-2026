@@ -196,22 +196,175 @@ RN-08     O SLA só deve ser considerado cumprido quando a imagem for entregue a
 5. Product Backlog
 ========================================
 
-O backlog foi organizado em épicos e histórias de usuário, com critérios de aceite que representam a Definition of Done de cada item.
+O backlog foi organizado em épicos e histórias de usuário. Cada HU possui um formato padrão e critérios de aceite (Definition of Done - DoD) claros e testáveis.
 
-Épico              | HU    | História de usuário                                                                                          | Definition of Done / Critérios de aceite
-E01 - Gestão de acesso | HU-01 | Como cliente solicitante, quero criar uma conta institucional para acessar a API.                            | Conta criada com nome, tipo de cliente e contato; dados obrigatórios validados; cliente fica ativo para criar solicitações.
-E01 - Gestão de acesso | HU-02 | Como usuário autenticado, quero realizar login para acessar funcionalidades conforme meu perfil.            | Login retorna token válido; usuário sem credenciais corretas é bloqueado; perfil é aplicado nas permissões.
-E02 - Solicitações de imagem | HU-03 | Como cliente, quero criar uma solicitação de imagem informando local, desastre, urgência e prazo.     | Solicitação salva com status inicial; campos obrigatórios validados; área geográfica e prazo ficam registrados.
-E02 - Solicitações de imagem | HU-04 | Como cliente, quero acompanhar o status da minha solicitação.                                         | API retorna status atual; exibe prioridade, prazo e próxima etapa; apenas usuários autorizados visualizam a solicitação.
-E03 - Priorização   | HU-05 | Como operador de missão, quero que a prioridade de cada solicitação seja calculada automaticamente para que eu receba a fila já ordenada por urgência real.  | Pontuação é calculada com critérios definidos; resultado fica salvo; justificativa da pontuação é retornada pela API.
-E03 - Priorização   | HU-06 | Como operador, quero visualizar uma fila ordenada por prioridade.                                           | Fila aparece em ordem decrescente; pode filtrar por tipo de desastre/status; itens com SLA mais crítico ficam evidentes.
-E04 - Satélites e sensores | HU-07 | Como administrador, quero cadastrar satélites e sensores disponíveis.                                 | Cadastro inclui nome, sensor, resolução, status e disponibilidade; dados inválidos são recusados.
-E04 - Satélites e sensores | HU-08 | Como operador de missão, quero que o sistema valide a compatibilidade entre sensor e desastre antes de agendar uma captura, para evitar desperdício de janela orbital.  | Sistema compara desastre e sensor; sensores incompatíveis não são agendados; alternativa é sugerida quando existir.
-E05 - Agendamento orbital | HU-09 | Como operador, quero buscar janelas de captura disponíveis para a área solicitada.                     | Retorna janelas candidatas; considera prazo e satélite ativo; ignora janelas fora do SLA.
-E05 - Agendamento orbital | HU-10 | Como operador, quero reservar uma janela sem conflito de agenda.                                       | Reserva é criada somente se não houver sobreposição; conflitos retornam erro padronizado; status da solicitação é atualizado.
-E06 - Ordem de captura | HU-11 | Como operador, quero gerar uma ordem de captura a partir de uma reserva aprovada.                       | Ordem contém solicitação, satélite, sensor, janela e prioridade; status muda para aguardando captura.
-E07 - Entrega e SLA  | HU-12 | Como cliente, quero receber o link da imagem e saber se o prazo foi cumprido.                               | Entrega registra data, link e metadados; sistema calcula SLA cumprido/não cumprido; cliente consegue consultar o resultado.
-E08 - Auditoria e indicadores | HU-13 | Como gestor, quero visualizar indicadores de operação e histórico de decisões.                    | API retorna volume por desastre, SLA, tempo médio e alterações manuais; dados podem ser auditados por período.
+--------------------------------------------------
+ÉPICO: E01 - Gestão de acesso
+--------------------------------------------------
+
+HU-01: Cadastro de Cliente Institucional
+Como um cliente solicitante (Defesa Civil, ONG, prefeitura, etc.)
+Quero criar uma conta institucional
+Para que eu possa acessar a API e realizar solicitações de imagem.
+
+Critérios de Aceite (DoD):
+- [ ] O sistema deve disponibilizar um endpoint para cadastro de clientes.
+- [ ] O payload deve exigir os campos obrigatórios: nome da instituição, CNPJ ou identificação equivalente, tipo de cliente, e-mail e senha.
+- [ ] Se algum campo obrigatório não for enviado ou for inválido, a API deve retornar erro HTTP 400 (Bad Request).
+- [ ] A senha deve ser criptografada (hash) antes de ser salva no banco de dados.
+- [ ] Ao salvar com sucesso, a API deve retornar status HTTP 201 (Created) e o ID do novo cliente.
+
+HU-02: Autenticação e Login
+Como um usuário cadastrado
+Quero realizar login com minhas credenciais
+Para que eu possa obter um token de acesso e utilizar os endpoints restritos ao meu perfil.
+
+Critérios de Aceite (DoD):
+- [ ] O sistema deve disponibilizar um endpoint de login recebendo e-mail e senha.
+- [ ] Se as credenciais forem válidas, a API deve retornar status HTTP 200 (OK) junto com um token JWT válido.
+- [ ] O token JWT deve conter as informações de perfil (cliente, operador, admin) para autorização baseada em roles (RBAC).
+- [ ] Se as credenciais forem inválidas, a API deve retornar HTTP 401 (Unauthorized).
+
+--------------------------------------------------
+ÉPICO: E02 - Solicitações de imagem
+--------------------------------------------------
+
+HU-03: Criação de Solicitação de Imagem
+Como um cliente autenticado
+Quero criar uma solicitação de imagem informando área geográfica, tipo de desastre, urgência e prazo
+Para que o sistema processe meu pedido e busque recursos orbitais para o atendimento.
+
+Critérios de Aceite (DoD):
+- [ ] O endpoint de criação deve receber as coordenadas geográficas (polígono ou ponto), tipo de desastre, nível de urgência, risco humano e prazo desejado.
+- [ ] O sistema deve validar se o prazo desejado é uma data futura válida; caso contrário, retornar erro 400.
+- [ ] A solicitação recém-criada deve receber automaticamente o status inicial "Pendente".
+- [ ] A API deve retornar status 201 (Created) com o número (ID) da solicitação gerada para rastreio.
+
+HU-04: Acompanhamento de Status da Solicitação
+Como um cliente autenticado
+Quero consultar o andamento da minha solicitação
+Para que eu saiba se ela foi aprovada, agendada ou já foi capturada.
+
+Critérios de Aceite (DoD):
+- [ ] O cliente pode consultar os dados da sua solicitação através de um endpoint GET pelo ID da solicitação.
+- [ ] A API deve retornar o status atual (Pendente, Agendada, Concluída, Cancelada), a prioridade calculada e a data de atualização mais recente.
+- [ ] Um cliente não pode visualizar solicitações feitas por outras instituições (retornar 403 Forbidden).
+
+--------------------------------------------------
+ÉPICO: E03 - Priorização
+--------------------------------------------------
+
+HU-05: Cálculo Automático de Prioridade
+Como um operador de missão
+Quero que o sistema calcule automaticamente a pontuação de prioridade de uma nova solicitação
+Para que pedidos urgentes e com risco à vida fiquem no topo da fila sem depender de triagem manual.
+
+Critérios de Aceite (DoD):
+- [ ] Sempre que uma solicitação for criada, o motor de prioridade deve rodar automaticamente.
+- [ ] O cálculo deve atribuir pesos maiores para "Risco Humano = Alto" e "Tipo de Cliente = Defesa Civil" (conforme regras de negócio RN-01 e RN-02).
+- [ ] A pontuação calculada deve ser salva no banco de dados vinculada à solicitação.
+- [ ] A API deve retornar a pontuação e a justificativa (ex: "+50 pts por Risco Humano") ao detalhar a solicitação.
+
+HU-06: Visualização da Fila de Solicitações
+Como um operador de missão
+Quero visualizar a fila de todas as solicitações pendentes ordenadas por prioridade
+Para que eu saiba quais pedidos devem ser agendados primeiro.
+
+Critérios de Aceite (DoD):
+- [ ] O endpoint de listagem para operadores deve retornar as solicitações ordenadas decrescentemente pela pontuação de prioridade.
+- [ ] O endpoint deve suportar filtros por "Status", "Tipo de Desastre" e "Intervalo de Datas".
+- [ ] O tempo de resposta da listagem deve ser inferior a 2 segundos (atendendo ao requisito RNF-02).
+
+--------------------------------------------------
+ÉPICO: E04 - Satélites e sensores
+--------------------------------------------------
+
+HU-07: Cadastro de Infraestrutura Orbital (Satélites e Sensores)
+Como um administrador do sistema
+Quero cadastrar as informações dos satélites e os sensores que eles possuem
+Para que o sistema saiba quais recursos estão disponíveis para realizar capturas.
+
+Critérios de Aceite (DoD):
+- [ ] O sistema deve permitir o cadastro de um satélite com nome, status operacional (Ativo, Manutenção) e órbita.
+- [ ] O sistema deve permitir vincular sensores a um satélite, informando o tipo (Óptico, SAR, Termal) e a resolução espacial.
+- [ ] Ao tentar cadastrar um satélite com um nome já existente, o sistema deve retornar conflito (HTTP 409).
+
+HU-08: Validação de Compatibilidade de Sensor
+Como um operador de missão
+Quero que o sistema me alerte sobre a compatibilidade entre o tipo de desastre e o sensor selecionado
+Para que eu não agende uma captura com um sensor que não seja útil para a ocorrência.
+
+Critérios de Aceite (DoD):
+- [ ] Ao iniciar o agendamento, o sistema deve cruzar o tipo de desastre com o tipo de sensor do satélite.
+- [ ] Se o desastre for "Queimada" ou tiver "Alta Cobertura de Nuvens" e o sensor for apenas Óptico, a API deve retornar um aviso de incompatibilidade (RN-06).
+- [ ] A reserva só deve prosseguir se o operador confirmar ciente do aviso ou alterar para um satélite com sensor SAR.
+
+--------------------------------------------------
+ÉPICO: E05 - Agendamento orbital
+--------------------------------------------------
+
+HU-09: Busca de Janelas de Captura
+Como um operador de missão
+Quero consultar as janelas de passagem de satélites viáveis para uma solicitação
+Para que eu possa escolher o melhor momento de capturar a imagem.
+
+Critérios de Aceite (DoD):
+- [ ] O sistema deve receber o ID da solicitação e retornar uma lista de janelas de tempo disponíveis.
+- [ ] A lista deve exibir apenas satélites que possuem status "Ativo" e sensores compatíveis (conforme HU-08).
+- [ ] As janelas devem estar dentro do prazo exigido pelo cliente; janelas após o prazo devem vir sinalizadas como "SLA comprometido".
+
+HU-10: Reserva e Prevenção de Conflitos
+Como um operador de missão
+Quero confirmar a reserva de uma janela de captura
+Para que o sistema aloque o satélite e garanta que ninguém mais agende outra missão no mesmo período.
+
+Critérios de Aceite (DoD):
+- [ ] Ao confirmar a reserva, o sistema deve verificar no banco de dados se a janela desejada do satélite já está ocupada.
+- [ ] Em caso de conflito, a operação deve ser cancelada e a API deve retornar HTTP 409 (Conflict).
+- [ ] Em caso de sucesso, o status da solicitação muda de "Pendente" para "Agendada".
+
+--------------------------------------------------
+ÉPICO: E06 - Ordem de captura
+--------------------------------------------------
+
+HU-11: Geração de Ordem de Captura
+Como um operador de missão
+Quero emitir a Ordem de Captura final a partir de uma reserva validada
+Para enviar os parâmetros técnicos ao centro de controle do satélite.
+
+Critérios de Aceite (DoD):
+- [ ] A Ordem de Captura deve consolidar as coordenadas, o ID do satélite, o tipo de sensor e o horário da janela reservada.
+- [ ] O documento/registro gerado deve ter um identificador único (ID da Ordem).
+- [ ] O status da solicitação deve ser atualizado para "Aguardando Captura".
+
+--------------------------------------------------
+ÉPICO: E07 - Entrega e SLA
+--------------------------------------------------
+
+HU-12: Entrega de Imagem e Avaliação de SLA
+Como um cliente
+Quero receber o link da imagem capturada e um relatório de SLA
+Para que eu possa acessar o dado e saber se a plataforma cumpriu o prazo acordado.
+
+Critérios de Aceite (DoD):
+- [ ] A API deve disponibilizar um endpoint para registrar a entrega da imagem (recebendo a URL do arquivo e os metadados).
+- [ ] O sistema deve comparar a data/hora real de entrega com o prazo estabelecido na criação da solicitação.
+- [ ] A solicitação deve ter o status atualizado para "Concluída".
+- [ ] O campo indicador "SLA Cumprido" deve ser salvo como verdadeiro ou falso (booleano) de forma automática.
+
+--------------------------------------------------
+ÉPICO: E08 - Auditoria e indicadores
+--------------------------------------------------
+
+HU-13: Dashboard de Indicadores (Métricas)
+Como um gestor da plataforma
+Quero consultar métricas sobre os atendimentos e SLA
+Para acompanhar a eficiência do processo e gerar relatórios.
+
+Critérios de Aceite (DoD):
+- [ ] A API deve ter um endpoint restrito ao perfil de gestor/admin que retorna dados agregados.
+- [ ] O payload de resposta deve incluir: total de solicitações no mês, taxa (%) de SLA cumprido e distribuição de chamados por tipo de desastre.
+- [ ] A consulta deve permitir filtros por mês e por região/cliente.
 
 
 ========================================
